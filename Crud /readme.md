@@ -1,9 +1,176 @@
-Responsibility List
-Team Member	Responsibility
-Daksh Patel & Jay Patel	Database Design & Entity Relations Diagram
-Chintan Harsora	CRUD Function Implementation & Unit Testing
+SENG8071 - Final Assignment
 
+Daksh Patel - 8887759
+Chintan Harsora - 8976824
+Jaykumar Patel - 8781807
 
+# Group Members and Assigned Duties
+---------------------------------------------------------------------
+| Member Name    | Student ID | Assigned Duty                        |
+|----------------|------------|--------------------------------------|
+| Chinatn        | 8976824    | CRUD Operation                       |
+| Daksh          | 8887759    | Testing                              |
+| Jay            | 8781807    | Environment Setup And Documentation  |
+----------------------------------------------------------------------
+
+Tables
+
+# Bookstore System
+
+## Tables and Attributes
+
+### Books
+| Attribute Name  | Data Type |
+|-----------------|-----------|
+| BookId          | 123       |
+| Title           | Hopeless  |
+| Genre           | Thriller  |
+| AuthorId        | HP12      |
+| PublisherId     | PB1       |
+| PublishDate     | 2008-05-12|
+| Price           | 450       |
+
+### Authors
+| Attribute Name  | Data Type |
+|-----------------|-----------|
+| AuthorId        | 452       |
+| Name            | J M SOD   |
+| Biography       | Time lie  |
+| Birthdate       | 1928-09-21|
+
+### BookAuthor
+| Attribute Name  | Data Type |
+|-----------------|-----------|
+| BookId          | 309       |
+| AuthorId        | 452       |
+| AuthorName      | J M SOD   |
+
+### Publishers
+| Attribute Name  | Data Type |
+|-----------------|-----------|
+| PublisherId     | HJ9       |
+| Name            | S D JON   |
+| ContactInfo     | 9876789   |
+
+### Customers
+| Attribute Name  | Data Type |
+|-----------------|-----------|
+| CustomerId      | CU2       |
+| Name            | BEN WUK   |
+| Email           | FA@HAM.   |
+| TotalSpent      | $3444     |
+| RegistrationDate| 2011-09-11|
+
+### Orders
+| Attribute Name  | Data Type |
+|-----------------|-----------|
+| OrderId         | OD3       |
+| CustomerId      | CU2       |
+| OrderDate       | 2012-08-14|
+| TotalAmount     | $150      |
+
+### OrderDetails
+| Attribute Name  | Data Type |
+|-----------------|-----------|
+| OrderDetailId   | OI9       |
+| OrderId         | OD3       |
+| BookId          | 378       |
+| Quantity        | 1         |
+| Price           | $150      |
+
+### Reviews
+| Attribute Name  | Data Type |
+|-----------------|-----------|
+| ReviewId        | RE1       |
+| CustomerId      | CU2       |
+| BookId          | 378       |
+| Rating          | 5         |
+| ReviewDate      | 2012-08-15|
+
+## SQL
+
+### Create Tables
+
+```sql
+-- Create the Book table
+CREATE TABLE `Book` (
+    BookID INT PRIMARY KEY,
+    Title VARCHAR(20) NOT NULL,
+    Genre VARCHAR(10) NOT NULL,
+    PublicationDate DATE NOT NULL,
+    Price DECIMAL(10, 2) NOT NULL,
+    AverageRating DECIMAL(3, 2),
+    PublisherID INT,
+    FOREIGN KEY (PublisherID) REFERENCES Publisher(PublisherID)
+);
+
+-- Create the Author table
+CREATE TABLE `Author` (
+    AuthorID INT PRIMARY KEY,
+    Name VARCHAR(20) NOT NULL,
+    Biography TEXT
+);
+
+-- Create the BookAuthor table
+CREATE TABLE `BookAuthor` (
+    BookID INT,
+    AuthorID INT,
+    AuthorName VARCHAR(20) NOT NULL,
+    PRIMARY KEY (BookID, AuthorID),
+    FOREIGN KEY (BookID) REFERENCES Book(BookID),
+    FOREIGN KEY (AuthorID) REFERENCES Author(AuthorID)
+);
+
+-- Create the Publisher table
+CREATE TABLE `Publisher` (
+    PublisherID INT PRIMARY KEY,
+    Name VARCHAR(20) NOT NULL,
+    ContactInfo VARCHAR(20)
+);
+
+-- Create the Customer table
+CREATE TABLE `Customer` (
+    CustomerID INT PRIMARY KEY,
+    Name VARCHAR(20) NOT NULL,
+    Email VARCHAR(20) NOT NULL UNIQUE,
+    RegistrationDate DATE NOT NULL,
+    TotalSpentLastYear DECIMAL(10, 2) DEFAULT 0
+);
+
+-- Create the Order table
+CREATE TABLE `Order` (
+    OrderID INT PRIMARY KEY,
+    CustomerID INT,
+    OrderDate DATETIME NOT NULL,
+    TotalAmount DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
+);
+
+-- Create the OrderItem table
+CREATE TABLE `OrderItem` (
+    OrderItemID INT PRIMARY KEY,
+    OrderID INT,
+    BookID INT,
+    Quantity INT NOT NULL,
+    Price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (OrderID) REFERENCES `Order`(OrderID),
+    FOREIGN KEY (BookID) REFERENCES Book(BookID)
+);
+
+-- Create the Review table
+CREATE TABLE `Review` (
+    ReviewID INT PRIMARY KEY,
+    BookID INT,
+    CustomerID INT,
+    Rating INT NOT NULL CHECK (Rating >= 1 AND Rating <= 5),
+    ReviewText TEXT,
+    ReviewDate DATETIME NOT NULL,
+    FOREIGN KEY (BookID) REFERENCES Book(BookID),
+    FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
+);
+ 
+
+TYPE-ORM
 Table Author
 
 import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
