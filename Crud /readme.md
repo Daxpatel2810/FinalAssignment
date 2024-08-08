@@ -1,3 +1,9 @@
+Responsibility List
+Team Member	Responsibility
+Daksh Patel & Jay Patel	Database Design & Entity Relations Diagram
+Chintan Harsora	CRUD Function Implementation & Unit Testing
+
+
 Table Author
 
 import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
